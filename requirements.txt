@@ -1,0 +1,23 @@
+# PDF to Audiobook Converter Requirements
+# Core dependencies for enhanced gTTS PDF audiobook conversion
+
+# PDF processing
+PyPDF2>=3.0.0
+
+# Google Text-to-Speech with advanced preprocessing
+gTTS>=2.3.0
+
+# Audio processing for speed adjustment (recommended)
+pydub>=0.25.0
+
+# Optional: For additional audio playback features (uncomment if needed)
+# pygame>=2.1.0
+
+# Standard library modules (included with Python)
+# - os
+# - re
+# - time
+# - sys
+# - pathlib
+# - typing
+# - logging
