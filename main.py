@@ -263,6 +263,8 @@ class AdvancedPDFToAudiobookGTTS:
             
             return text
         
+        # Return the preprocessor function
+        return academic_text_preprocessor
     def apply_speed_adjustment(self, filename: str) -> bool:
         """
         Apply speed adjustment to the audio file using audio processing
@@ -318,10 +320,11 @@ class AdvancedPDFToAudiobookGTTS:
         """Get the list of preprocessors including custom ones"""
         try:
             # Try to use all enhanced preprocessors
+            custom_preprocessor = self.create_custom_preprocessor()
             return [
                 pre_processors.tone_marks,          # Handle tone marks
                 pre_processors.end_of_line,         # Fix hyphenated words
-                self.create_custom_preprocessor(),  # Our custom academic preprocessor
+                custom_preprocessor,                # Our custom academic preprocessor
                 pre_processors.abbreviations,       # Remove periods from abbreviations
                 pre_processors.word_sub,           # Word substitutions
             ]
@@ -329,8 +332,9 @@ class AdvancedPDFToAudiobookGTTS:
             self.logger.warning(f"Could not load all preprocessors: {e}")
             # Fallback to basic preprocessors
             try:
+                custom_preprocessor = self.create_custom_preprocessor()
                 return [
-                    self.create_custom_preprocessor(),  # Our custom preprocessor should always work
+                    custom_preprocessor,                # Our custom preprocessor should always work
                     pre_processors.abbreviations,       # Basic abbreviation handling
                     pre_processors.word_sub,           # Basic word substitution
                 ]
@@ -389,7 +393,8 @@ class AdvancedPDFToAudiobookGTTS:
         
         # Apply the custom preprocessors manually for preview
         custom_preprocessor = self.create_custom_preprocessor()
-        cleaned_text = custom_preprocessor(cleaned_text)
+        if callable(custom_preprocessor):
+            cleaned_text = custom_preprocessor(cleaned_text)
         
         return cleaned_text.strip()
     
